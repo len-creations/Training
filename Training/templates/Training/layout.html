@@ -1,0 +1,63 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Training Management System{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'Training/style.css' %}">
+</head>
+<body>   
+    <h1>Training Management System</h1>
+    
+    <header class="header">
+        
+        <div class="profile-box">
+            {% if user.is_authenticated %}
+            <p>signed in as, {{user.username}}</p>
+                {% if user.profile.profile_pic %}
+                    <img src="{{ user.profile.profile_pic.url }}" alt="Profile Picture">
+                {% else %}
+                    <img src="{% static 'Training/images/trainingdefault image.png' %}" alt="Default Profile Picture">
+                {% endif %}
+                <div>{{ user.profile.name }}</div>
+                <div>Staff Number: {{ user.profile.staffnumber }}</div>
+            {% endif %}
+            
+            {% if user.is_authenticated %}
+            
+                <ul class="navlink">
+                    <li><a href="{% url 'logout' %}">Log Out</a></li>
+                    <li><a href="{% url 'index' %}">Home</a></li>
+                </ul>
+            {% else %}
+                <ul class="nav">
+                    <li><a href="{% url 'login' %}?next={{ request.path }}">Log In</a></li>
+                    <li><a href="{% url 'register' %}">Register</a></li>
+                </ul>
+            {% endif %}
+            <nav class="navlink">
+                <ul class="nav">
+                    <li><a href="#">Training Modules</a></li>
+                    <li><a href="{% url 'Profile_pic' %}">add profile pic</a></li>
+                    <li><a href="{% url 'update_profile' %}">Create Profile</a></li>
+                </ul>
+
+            </nav>
+        </div>
+    </header>    
+                        
+
+ 
+    <main>
+        {% block body %}
+
+        {% endblock %}
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <img src="{% static 'Training/images/footer logo.png' %}" alt="footer image">
+            <p>&copy; 2024 Training Management System</p>
+        </div>
+    </footer>
+</body>
