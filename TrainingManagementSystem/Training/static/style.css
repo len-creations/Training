@@ -1,0 +1,21 @@
+/* styles.css */
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    margin: 20px;
+    padding: 20px;
+    background-color: #f2f2f2;
+}
+h1 {
+    color: #333;
+}
+.profile-box {
+    display: flex;
+    align-items: center;
+}
+.profile-box img {
+    width: 100px; 
+    height: 100px; 
+    border-radius:200%; 
+    margin-right: 10px;
+}
