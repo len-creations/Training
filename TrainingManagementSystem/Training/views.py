@@ -56,7 +56,7 @@ def register(request):
     else:
         return render(request, "Training/register.html")
             
-            
+           
 
             
             

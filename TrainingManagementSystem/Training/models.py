@@ -23,7 +23,7 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=100, default="John Doe")
     staffnumber = models.CharField(max_length=100, default='Q0000')
-    profile_pic = models.ImageField(upload_to='uploads/profile_pics', blank=True, null=True)
+    profile_pic = models.ImageField(upload_to='Training/profile_pics', blank=True, null=True)
     team = models.CharField(max_length=20, default="Team00")
     designation = models.CharField(max_length=60, default="technician")
     facility = models.CharField(max_length=15, default="cargo")
