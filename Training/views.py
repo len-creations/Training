@@ -1,16 +1,19 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,get_object_or_404  
 from django.contrib.auth import authenticate,login, logout
 from django.http import HttpResponseRedirect,HttpResponseNotFound
 from django.urls import reverse
-from .models import User,Profile
+from .models import User,Profile,TrainingModule
 from django.db import IntegrityError
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages  
-from.forms import profileupdateform,UserProfileForm
+from.forms import profileupdateform,UserProfileForm,TrainingModuleForm
+from PyPDF2 import PdfReader
+import os
 
 # Create your views here.
 def index(request):
     return render(request,'Training/layout.html')
+###########################ACCOUNT REGISTRATION AND PROFILE HANDLING############################
 def login_view(request):
     if request.method=="POST":
         username = request.POST["username"]
@@ -61,22 +64,68 @@ def register(request):
             
 def success_page(request):
     return render(request, 'Training/success.html')
+
+@login_required
+def create_profile(request):
+    user_instance = request.user
+
+    try:
+        profile_instance = Profile.objects.get(user=user_instance)
+        messages.info(request, 'Profile already exists. You can update it instead.')
+        return redirect('update_profile')  # Redirect to update profile page if it exists
+    except Profile.DoesNotExist:
+        # No profile exists, so proceed to create one
+        if request.method == 'POST':
+            form = profileupdateform(request.POST, request.FILES, user_instance=user_instance)
+            if form.is_valid():
+                profile = form.save(commit=False)
+                profile.user = user_instance
+                profile.save()
+                messages.success(request, 'Profile created successfully!')
+                return redirect('success_page')  # Redirect to a success page or any other page
+        else:
+            form = profileupdateform(user_instance=user_instance)
+
+    return render(request, 'Training/create_profile.html', {'form': form})
           
 @login_required
 def update_profile(request):
+    # Retrieve or create a Profile instance for the current user
     try:
-        user_instance = request.user
-    except AttributeError:
-        messages.error(request, 'User object not found. Please log in.')
-        return redirect('index')
+        profile_instance = Profile.objects.get(user=request.user)
+    except Profile.DoesNotExist:
+        messages.error(request, 'Profile not found. Please create a profile first.')
+        return redirect('create_profile')  # Redirect to profile creation page or similar
 
     if request.method == 'POST':
-        form = profileupdateform(request.POST, instance=user_instance)
+        form = profileupdateform(request.POST, request.FILES, instance=profile_instance)
         if form.is_valid():
             form.save()
+            messages.success(request, 'Profile updated successfully!')
             return redirect("success_page")
     else:
-        form = profileupdateform(instance=user_instance)
+        form =profileupdateform(instance=profile_instance)
+
+    return render(request, 'Training/create_profile.html', {'form': form})
+
+
+@login_required
+def profile_Pic(request):
+    # Retrieve or create a Profile instance for the current user
+    try:
+        profile_instance = Profile.objects.get(user=request.user)
+    except Profile.DoesNotExist:
+        messages.error(request, 'Profile not found. Please create a profile first.')
+        return redirect('create_profile')  # Redirect to profile creation page or similar
+
+    if request.method == 'POST':
+        form = UserProfileForm(request.POST, request.FILES, instance=profile_instance)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Profile updated successfully!')
+            return redirect("success_page")
+    else:
+        form =UserProfileForm(instance=profile_instance)
 
     return render(request, 'Training/create_profile.html', {'form': form})
 
@@ -85,21 +134,48 @@ def custom_404_view(request,exception):
         return render(request, 'Training/404.html', status=404)
     else:
         return HttpResponseNotFound('<h1>Page not found</h1>')
-    
-def Profile_pic(request):
-    try:
-        user_instance = request.user
-        profile_instance, created = Profile.objects.get_or_create(user=user_instance)
-    except AttributeError:
-        messages.error(request, 'User object not found. Please log in.')
-        return redirect('index')
-
+####################################################################################ABOUT MODULES AND MODULE HANDLING#########################
+def training_module_create(request):
     if request.method == 'POST':
-        form = UserProfileForm(request.POST, request.FILES, instance=profile_instance)
+        form = TrainingModuleForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
-            return redirect("success_page")
+            return redirect('training_module_list')
     else:
-        form = UserProfileForm(instance=profile_instance)
+        form = TrainingModuleForm()
+    return render(request, 'Training/training_module_form.html', {'form': form})
 
-    return render(request, 'Training/profile_pic.html', {'form': form, 'profile': profile_instance})
+def training_module_delete(request, pk):
+    training_module = get_object_or_404(TrainingModule, pk=pk)
+
+    if request.method == 'POST':
+        training_module.delete()
+        return redirect('show_all')  # Redirect to the list view after deletion
+
+    return render(request, 'Training/training_module_confirm_delete.html', {'training_module': training_module})
+
+
+@login_required
+def training_module_list(request):
+    training_modules = TrainingModule.objects.all()
+    return render(request, 'Training/training_module_list.html', {'training_modules': training_modules})
+
+def training_module_detail(request, pk):
+    training_module = get_object_or_404(TrainingModule, pk=pk)
+
+    if training_module.file:
+        file_extension = os.path.splitext(training_module.file.name)[1].lower()
+
+        if file_extension == '.pdf':
+            with open(training_module.file.path, 'rb') as f:
+                pdf_reader = PdfReader(f)
+                num_pages = len(pdf_reader.pages)
+
+            if training_module.total_pages != num_pages:
+                training_module.total_pages = num_pages
+                training_module.save()
+
+    return render(request, 'Training/training_module_detail.html', {
+        'training_module': training_module,
+        'page_range': range(1, training_module.total_pages + 1) if training_module.total_pages else None
+    })

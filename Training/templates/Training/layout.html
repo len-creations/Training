@@ -37,9 +37,10 @@
             {% endif %}
             <nav class="navlink">
                 <ul class="nav">
-                    <li><a href="#">Training Modules</a></li>
-                    <li><a href="{% url 'Profile_pic' %}">add profile pic</a></li>
+                    <li><a href="{% url 'training_module_list' %}">Training Modules</a></li>
+                    <li><a href="{% url 'profile_Pic' %}">add profile pic</a></li>
                     <li><a href="{% url 'update_profile' %}">Create Profile</a></li>
+                    <a href="{% url 'training_module_create' %}">Create New Training Module</a>
                 </ul>
 
             </nav>
