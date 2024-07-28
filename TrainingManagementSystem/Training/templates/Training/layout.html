@@ -7,37 +7,58 @@
     <link rel="stylesheet" href="{% static 'Training/style.css' %}">
 </head>
 <body>   
-    <header>
-        <h1>Training Management System</h1>
-
-    <ul>{% if user.is_authenticated %}
-        <p>Signed in as, {{ user.username }}!</p>
+    <h1>Training Management System</h1>
+    
+    <header class="header">
+        
         <div class="profile-box">
-            {% if user.profile.profile_pic %}
-                <img src="{{ user.profile.profile_pic.url }}" alt="Profile Picture">
-              <div>staffnumber: {{ user.profile.staffnumber }}</div>
-              <div> <p>{{ user.profile.name }}</p></div>
-              {% else %}
-              <!--  default image -->
-              <img src="{% static 'Training/images/trainingdefault image.png' %}" alt="Default Profile Picture">
-              <div> <p>{{ user.profile.name }}</p></div>
-              <div>staffnumber: {{ user.profile.staffnumber }}</div>
-                 
-                </div> 
-          {% endif %} 
-          <div>  
-        <li><a href="{% url 'logout' %}">Log Out</a></li>
-        {% else %}
-        <li><a href="{% url 'login' %}?next={{ request.path }}">Log In</a></li>
-        <li><a href="{% url 'register' %}">Register</a></li></ul>
-        {% endif %}
-    </header>
+            {% if user.is_authenticated %}
+            <p>signed in as, {{user.username}}</p>
+                {% if user.profile.profile_pic %}
+                    <img src="{{ user.profile.profile_pic.url }}" alt="Profile Picture">
+                {% else %}
+                    <img src="{% static 'Training/images/trainingdefault image.png' %}" alt="Default Profile Picture">
+                {% endif %}
+                <div>{{ user.profile.name }}</div>
+                <div>Staff Number: {{ user.profile.staffnumber }}</div>
+            {% endif %}
+            
+            {% if user.is_authenticated %}
+            
+                <ul class="navlink">
+                    <li><a href="{% url 'logout' %}">Log Out</a></li>
+                    <li><a href="{% url 'index' %}">Home</a></li>
+                </ul>
+            {% else %}
+                <ul class="nav">
+                    <li><a href="{% url 'login' %}?next={{ request.path }}">Log In</a></li>
+                    <li><a href="{% url 'register' %}">Register</a></li>
+                </ul>
+            {% endif %}
+            <nav class="navlink">
+                <ul class="nav">
+                    <li><a href="{% url 'training_module_list' %}">Training Modules</a></li>
+                    <li><a href="{% url 'profile_Pic' %}">add profile pic</a></li>
+                    <li><a href="{% url 'update_profile' %}">Create Profile</a></li>
+                    <a href="{% url 'training_module_create' %}">Create New Training Module</a>
+                </ul>
+
+            </nav>
+        </div>
+    </header>    
+                        
+
+ 
     <main>
         {% block body %}
+
         {% endblock %}
     </main>
 
     <footer>
-        <p>&copy; 2024 Training Management System</p>
+        <div class="footer-content">
+            <img src="{% static 'Training/images/footer logo.png' %}" alt="footer image">
+            <p>&copy; 2024 Training Management System</p>
+        </div>
     </footer>
 </body>

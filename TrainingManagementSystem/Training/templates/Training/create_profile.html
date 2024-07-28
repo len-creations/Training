@@ -1,0 +1,19 @@
+    {% extends 'Training/layout.html' %}
+    {% block body %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create or Update Profile</title>
+</head>
+<body>
+    <!-- Conditional heading based on whether the form has an instance pk -->
+    <h1>{% if form.instance.pk %}Update{% else %}Create{% endif %} Training Profile</h1>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">{% if form.instance.pk %}Update{% else %}Create{% endif %} Profile</button>
+    </form>
+</body>
+</html>
+    {% endblock %}

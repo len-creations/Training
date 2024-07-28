@@ -1,0 +1,108 @@
+/* styles.css */
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    margin: 0px;
+    padding: 0px;
+    background-color: #f2f2f2;
+    background: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/652/confectionary.png);
+}
+.h1 {
+    color: #333;
+}
+.header {
+    color: #333; 
+    background-color: rgba(71, 70, 70, 0.808);
+    margin-top: 0px; 
+    padding: 5px;
+    display: flex;
+    border-radius: 3%;
+    justify-content: space-between;
+    align-items: center; /* Center items vertically */
+}
+
+.navlink {
+    margin-left: 20px; /* Adjust margin for spacing */
+    border-radius: 15px;
+    background-color: #f2f2f2;
+    color: black;
+}
+
+.navlink ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    
+}
+
+.navlink li {
+    display: inline-block;
+    margin-left: 10px;
+    color: #333;
+}
+
+.navlink li a {
+    text-decoration: none;
+    color: #204b96; 
+}
+
+.profile-box {
+    display: flex;
+    align-items: center;
+}
+
+.profile-box img {
+    width: 150px; 
+    height: 150px;
+    border-radius: 50%;
+    margin-right: 10px; 
+}
+
+.profile-box  div {
+    margin-right: 10px; 
+}
+
+/*  Logout link  */
+.profile-box ul {
+    margin-right: auto; 
+}
+
+.profile-box ul li {
+    display: inline-block;
+    margin-right: 10px;
+    border-radius: 15px;
+    background-color: #f0f0f0;
+    align-items: center;
+    text-align: justify;
+}
+
+.profile-box ul li a {
+    text-decoration: none;
+    color: #111211; 
+}
+footer {
+    background-color: #f0f0f0; 
+    padding: 0px; 
+    text-align: center;
+}
+
+.footer-content {
+    display: flex;
+    align-items: center; /* Align items vertically */
+    justify-content: center; /* Center items horizontally */
+}
+
+.footer-content img {
+    max-width: 600px; /* Adjust max-width of the image */
+    height: auto; /* Maintain aspect ratio */
+    margin-right: 0px; /* Optional: Adjust margin */
+}
+
+.footer-content p {
+    margin: 0; 
+    font-size: 14px; 
+}
+input[readonly], textarea[readonly] {
+    background-color: #909192; 
+    pointer-events: none; 
+}
