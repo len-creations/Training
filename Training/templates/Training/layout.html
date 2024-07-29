@@ -6,25 +6,20 @@
     <title>{% block title %}Training Management System{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'Training/style.css' %}">
 </head>
-<body>   
+<body>
     <h1>Training Management System</h1>
-    
+
     <header class="header">
-        
         <div class="profile-box">
             {% if user.is_authenticated %}
-            <p>signed in as, {{user.username}}</p>
-                {% if user.profile.profile_pic %}
-                    <img src="{{ user.profile.profile_pic.url }}" alt="Profile Picture">
-                {% else %}
-                    <img src="{% static 'Training/images/trainingdefault image.png' %}" alt="Default Profile Picture">
-                {% endif %}
-                <div>{{ user.profile.name }}</div>
-                <div>Staff Number: {{ user.profile.staffnumber }}</div>
-            {% endif %}
-            
-            {% if user.is_authenticated %}
-            
+                <div class="profile-info">
+                    <img src="{% if user.profile.profile_pic %}{{ user.profile.profile_pic.url }}{% else %}{% static 'Training/images/trainingdefault image.png' %}{% endif %}" alt="Profile Picture">
+                    <div class="profile-details">
+                        <p>Signed in as, {{ user.username }}!</p>
+                        <div>{{ user.profile.name }}</div>
+                        <div>Staff Number: {{ user.profile.staffnumber }}</div>
+                    </div>
+                </div>
                 <ul class="navlink">
                     <li><a href="{% url 'logout' %}">Log Out</a></li>
                     <li><a href="{% url 'index' %}">Home</a></li>
@@ -38,27 +33,24 @@
             <nav class="navlink">
                 <ul class="nav">
                     <li><a href="{% url 'training_module_list' %}">Training Modules</a></li>
-                    <li><a href="{% url 'profile_Pic' %}">add profile pic</a></li>
+                    <li><a href="{% url 'profile_Pic' %}">Add Profile Pic</a></li>
                     <li><a href="{% url 'update_profile' %}">Create Profile</a></li>
-                    <a href="{% url 'training_module_create' %}">Create New Training Module</a>
+                    <li><a href="{% url 'training_module_create' %}">Create New Training Module</a></li>
                 </ul>
-
             </nav>
         </div>
-    </header>    
-                        
+    </header>
 
- 
     <main>
         {% block body %}
-
         {% endblock %}
     </main>
 
     <footer>
         <div class="footer-content">
-            <img src="{% static 'Training/images/footer logo.png' %}" alt="footer image">
+            <img src="{% static 'Training/images/footer logo.png' %}" alt="Footer Image">
             <p>&copy; 2024 Training Management System</p>
         </div>
     </footer>
 </body>
+</html>
